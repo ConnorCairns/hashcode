@@ -1,10 +1,11 @@
 class Library():
-  def __init__(self, id, book_amount, signup, shipping, books):
+  def __init__(self, id, book_amount, signup, shipping, books, weight):
     self.id : int = int(id)
     self.book_amount : int = int(book_amount)
     self.signup : int = int(signup)
     self.shipping : int = int(shipping)
     self.books : List = books
+    self.weight : int = weight
 
 class Data():
   def __init__(self, file):
@@ -34,9 +35,13 @@ class Data():
 
       lib_books = []
       for i in data:
-        lib_books.append(self.books[int(i)])
+        lib_books.append(int(i))
 
-      lib = Library(c, lib_data[0], lib_data[1], lib_data[2], lib_books)
+      lib_books.sort(key=lambda x : self.books[x], reverse=True)
+
+      weight = self.calc_weight(self.books, lib_books, lib_data[1], lib_data[2])
+
+      lib = Library(c, lib_data[0], lib_data[1], lib_data[2], lib_books, weight)
       c += 1
       #lib.sort() #???
       self.libraries.append(lib)
@@ -45,3 +50,10 @@ class Data():
       line = f.readline()
 
     f.close()
+
+  def calc_weight(self, book_scores, lib_books, signup, shipping):
+    total_score = 0
+    for book in lib_books:
+      total_score += int(book_scores[book])
+    
+    return (total_score/int(signup))*int(shipping)
