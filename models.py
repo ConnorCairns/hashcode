@@ -1,4 +1,5 @@
 class Library():
+  sorted = False
   def __init__(self, id, book_amount, signup, shipping, books, weight):
     self.id : int = int(id)
     self.book_amount : int = int(book_amount)
@@ -37,11 +38,13 @@ class Data():
       for i in data:
         lib_books.append(int(i))
 
-      lib_books.sort(key=lambda x : self.books[x], reverse=True)
+      lib_books.sort(key = lambda x : self.books[x], reverse=True)
 
-      weight = self.calc_weight(self.books, lib_books, lib_data[1], lib_data[2])
-
+      #weight = self.calc_weight(self.books, lib_books, lib_data[1], lib_data[2])
+      weight = 0
       lib = Library(c, lib_data[0], lib_data[1], lib_data[2], lib_books, weight)
+      lib.weight = self.calc_weight(lib, self.books)
+      
       c += 1
       #lib.sort() #???
       self.libraries.append(lib)
@@ -51,9 +54,10 @@ class Data():
 
     f.close()
 
-  def calc_weight(self, book_scores, lib_books, signup, shipping):
+  #def calc_weight(self, book_scores, lib_books, signup, shipping):
+  def calc_weight(self, lib, book_scores):
     total_score = 0
-    for book in lib_books:
+    for book in lib.books:
       total_score += int(book_scores[book])
     
-    return (total_score/int(signup))*int(shipping)
+    return (total_score/int(lib.signup))*int(lib.shipping)
